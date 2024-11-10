@@ -1,27 +1,25 @@
+import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class GenerateQuizService {
-  constructor() {}
+  constructor(private readonly httpService: HttpService) {}
 
-  async execute(): Promise<any> {
-    return [
+  async execute(query: string): Promise<any> {
+    const response = await this.httpService.axiosRef.post(
+      `${process.env.API_URL}/generate-mock`,
       {
-        question: 'O que são números primos?',
-        alternatives: [
-          'a) Números que possuem apenas dois divisores: o número um e ele mesmo.',
-          'b) Números que possuem apenas um divisor: o número um.',
-          'c) Números que possuem mais de dois divisores.',
-          'd) Números que possuem apenas três divisores.',
-          'e) Nenhuma das alternativas.',
-        ],
-        answer: 0,
+        query,
+        k: 5,
       },
-      {
-        question: 'Qual é o resultado de 2 + 2?',
-        alternatives: ['a) 3', 'b) 4', 'c) 5', 'd) 6', 'e) 7'],
-        answer: 1,
-      },
-    ];
+    );
+
+    return response.data.map((question) => ({
+      question: question.question,
+      alternatives: question.options,
+      answer: question.options.findIndex(
+        (option: string) => option.at(0) === question.answer.at(0),
+      ),
+    }));
   }
 }
