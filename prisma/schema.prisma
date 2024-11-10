@@ -1,0 +1,37 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Logs {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("logs")
+}
+
+model Essays {
+  id         String  @id @default(cuid())
+  rawContent String? @map("raw_content")
+  subject    String  @default("default")
+  url        String
+  fileId     String  @map("file_id")
+  totalScore String? @map("total_score")
+  feedback   Json?
+
+  finalFeedback String? @map("final_feedback")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
