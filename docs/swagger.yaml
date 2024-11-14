@@ -1,0 +1,87 @@
+basePath: /api
+definitions:
+  model.User:
+    properties:
+      authProviderId:
+        type: string
+      bio:
+        type: string
+      createdAt:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      image:
+        type: string
+      updatedAt:
+        type: string
+      username:
+        type: string
+    required:
+    - email
+    type: object
+host: 127.0.0.1:8080
+info:
+  contact: {}
+  description: Edu BFF
+  title: Edu.AI BFF
+  version: "1.0"
+paths:
+  /accounts/authenticate:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate user with Auth0
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.User'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Authenticate user
+      tags:
+      - user
+  /accounts/me:
+    get:
+      consumes:
+      - application/json
+      description: Get user of the current logged user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.User'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Get user info
+      tags:
+      - user
+produces:
+- application/json
+schemes:
+- http
+- https
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
